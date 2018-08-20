@@ -39,6 +39,16 @@
       clearInterval(timer);
   };
 
+  $(function(){
+	    $(".inquiry a").hover(
+	    function(){
+	    	$(this).css("color","gray");
+	    },
+	    function(){
+	    	$(this).css("color","black");
+	    });
+	    });
+
   </script>
 </head>
 <body>
@@ -48,14 +58,18 @@
 <!-- メインビジュアル -->
 <div id ="MainArea">
 <h1>ホーム画面</h1>
+<div class="ribbon_box">
+    <span class="ribbon">★</span>
+    <div>
+       <p>サンプルウェブへようこそ！</p>
+    </div>
+</div>
 
-<div style="background-color : #CCC;">
    <div style="display:inline-flex;">
         <input type="button" value="START" onClick="timerStart()">
         <input type="button" value="STOP" onClick="timerStop()">
     </div>
     <img src="./images/images.jpg" id="dat" width="300" height="300">
-</div>
 
 
 
@@ -97,17 +111,13 @@
    </ul>
         ------------------------------------------------------------------
    <h2>お問合せ</h2>
+   <div class="inquiry">
    <ul>
-       <li>商品についてのお問合せ</li>
-       <li>弊社についてのお問合せ</li>
-       <li>その他についてのお問合せ</li>
+      <li><a href="InquiryAction">商品についてのお問合せ</a></li>
+      <li><a href="InquiryAction">弊社についてのお問合せ</a></li>
+      <li><a href="InquiryAction">その他についてのお問合せ</a></li>
    </ul>
-
-
-
-
-
-
+   </div>
 
     </div>
     </div>

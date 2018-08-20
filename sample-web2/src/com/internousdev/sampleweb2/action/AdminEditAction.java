@@ -14,8 +14,6 @@ import com.internousdev.sampleweb2.dto.ProductInfoDTO;
 import com.internousdev.sampleweb2.util.Pagination;
 import com.opensymphony.xwork2.ActionSupport;
 
-
-
 public class AdminEditAction extends ActionSupport implements SessionAware {
 	private String productName;
 	private String productNameKana;

@@ -14,6 +14,7 @@ import com.internousdev.sampleweb2.util.DateUtil;
 public class CartInfoDAO {
 	private DateUtil dateUtil = new DateUtil();
 
+	/*  カートの情報を取得するメソッド。*/
 	public List<CartInfoDTO> getCartInfoDtoList(String loginId) {
 		DBConnector dbConnector = new DBConnector();
 		Connection connection = dbConnector.getConnection();

@@ -30,7 +30,7 @@ public class AdminRegistAction extends ActionSupport implements SessionAware{
 	//正直あっているかわからない。　性別を元にして作成している。
 	//private String defaultCategoryIdValue = BOOK;
 	private Map<String, Object> session;
-	private String categoryId;
+	private int categoryId;
 
 	public String execute(){
 		String result = ERROR;
@@ -64,9 +64,8 @@ public class AdminRegistAction extends ActionSupport implements SessionAware{
 			//これはヘッダー部分で検索機能として置いているのでエラーを出さないようにする為の処置
 		}
 
+
 		System.out.println(session.get("mCategoryDtoList").toString());
-
-
 
 		result = SUCCESS;
 		return result;
@@ -125,10 +124,10 @@ public class AdminRegistAction extends ActionSupport implements SessionAware{
 	public void setReleaseDate(String releaseDate){
 		this.releaseDate = releaseDate;
 	}
-	public String getCategoryId(){
+	public int getCategoryId(){
 		return categoryId;
 	}
-	public void setCategoryId(String categoryId){
+	public void setCategoryId(int categoryId){
 		this.categoryId = categoryId;
 	}
 	/*public List<String> getCategoryIdList() {

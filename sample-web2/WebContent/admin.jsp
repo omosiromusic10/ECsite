@@ -36,6 +36,29 @@
     </div>
 </div>
 
+<div class="submit_btn_box3">
+    <div id=".contents-btn-set">
+    <s:form action="AdminProductSelectAction">
+        <s:submit value="商品一覧画面" class="submit_btn2"/>
+    </s:form>
+    </div>
+</div>
+
+<div class="submit_btn_box3">
+    <div id=".contents-btn-set">
+    <s:form action="AdminPurchaseSelectAction">
+        <s:submit value="購入履歴一覧画面" class="submit_btn2"/>
+    </s:form>
+    </div>
+</div>
+<div class="submit_btn_box3">
+    <div id=".contents-btn-set">
+    <s:form action="AdminDeleteAction">
+        <s:submit value="商品削除画面" class="submit_btn2"/>
+    </s:form>
+    </div>
+</div>
+
 
 
 

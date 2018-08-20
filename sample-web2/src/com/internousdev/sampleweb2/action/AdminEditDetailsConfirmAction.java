@@ -1,10 +1,12 @@
 package com.internousdev.sampleweb2.action;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -36,6 +38,8 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 	private List<String>releaseCompanyErrorMessageList = new ArrayList<String>();
 	private List<String>releaseDateErrorMessageList = new ArrayList<String>();
 
+	private List<String>userImageFileNameErrorMessageList = new ArrayList<String>();
+
 	private int categoryId;
 	private List<String>categoryIdList = new ArrayList<String>();
 	private Map<String, Object> session;
@@ -43,12 +47,6 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 	public String execute(){
 		String result = ERROR;
 		InputChecker inputChecker = new InputChecker();
-
-		System.out.println(userImage.getAbsolutePath());
-		System.out.println(userImage.getName());
-		System.out.println(userImage.getPath());
-
-
 
 		session.put("productName", productName);
 		session.put("productNameKana", productNameKana);
@@ -63,44 +61,76 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 		session.put("productId", productId);
 		session.put("userImage", userImage);
 
-		String filePath = ServletActionContext.getServletContext().getRealPath("/").concat("userimages");
-		System.out.println("Image Location:"+filePath);
-//		File fileToCreate = new File(filePath,userImageFileName);
+	    //ファイルアップロードの処理
+		if(!(userImage == null)){
+		String filePath = ServletActionContext.getServletContext().getRealPath("/").concat("images");
+		System.out.println("Image Location:" + filePath);
+		File fileToCreate = new File(filePath, userImageFileName);
+		try{
+			FileUtils.copyFile(userImage, fileToCreate);
+			   session.put("image_file_name", userImageFileName);
+			   session.put("image_file_path", "./images");
+			   session.put("image_flg" , userImageFileName);
+			   System.out.println(session.get("image_file_name"));
+			   System.out.println(session.get("image_file_path"));
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		}else{
+			userImageFileName="";
+			result = ERROR;
+		}
+		try{
+			switch(categoryId){
+			case 1:
+				session.put("categoryName","全てのカテゴリー");
+				break;
+			case 2:
+				session.put("categoryName","本");
+				break;
+			case 3:
+				session.put("categoryName","家電・パソコン");
+				break;
+			case 4:
+				session.put("categoryName","おもちゃ・ゲーム");
+				break;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+
 
 	productNameErrorMessageList = inputChecker.doCheck("商品名", productName, 1, 32, true, true, true, true, true, true, true);
 	productNameKanaErrorMessageList = inputChecker.doCheck("商品名ふりがな", productNameKana, 1, 32, false, false, true, false, false, false, false);
 	productDescriptionErrorMessageList = inputChecker.doCheck("商品名詳細", productDescription, 1, 320, true, true, true, true, true, true, true);
 	priceErrorMessageList = inputChecker.doCheck("価格", price, 1, 8, false, false, false, true, false, false, false);
-	imageFileNameErrorMessageList = inputChecker.doCheck("画像ファイル名", imageFileName, 1, 16, true, true, true, true, true, true, true);
+//	imageFileNameErrorMessageList = inputChecker.doCheck("画像ファイル名", imageFileName, 1, 16, true, true, true, true, true, true, true);
 	releaseCompanyErrorMessageList = inputChecker.doCheck("発売会社名", releaseCompany, 1, 16, true, true, true, true, false, true, false);
 	releaseDateErrorMessageList = inputChecker.doCheck("発売年月日", releaseDate, 1, 16, false, true, false, true, true, false, false);
+	userImageFileNameErrorMessageList = inputChecker.doCheck("画像ファイル", userImageFileName, 1, 32, true, true, true, true, true, true, true);
 
 	if(productNameErrorMessageList.size()==0
 			&& productNameKanaErrorMessageList.size()==0
 			&& productDescriptionErrorMessageList.size()==0
 			&& priceErrorMessageList.size()==0
-			&& imageFileNameErrorMessageList.size()==0
+	//		&& imageFileNameErrorMessageList.size()==0
 			&& releaseCompanyErrorMessageList.size()==0
-			&& releaseDateErrorMessageList.size()==0 ){
+			&& releaseDateErrorMessageList.size()==0
+		    && userImageFileNameErrorMessageList.size()==0 ){
 		result = SUCCESS;
 	}else{
 		session.put("productNameErrorMessageList", productNameErrorMessageList);
 		session.put("productNameKanaErrorMessageList", productNameKanaErrorMessageList);
 		session.put("productDescriptionErrorMessageList", productDescriptionErrorMessageList);
 		session.put("priceErrorMessageList", priceErrorMessageList);
-		session.put("imageFileNameErrorMessageList", imageFileNameErrorMessageList);
+	//	session.put("imageFileNameErrorMessageList", imageFileNameErrorMessageList);
 		session.put("releaseCompanyErrorMessageList", releaseCompanyErrorMessageList);
 		session.put("releaseDateErrorMessageList", releaseDateErrorMessageList);
+		session.put("userImageFileNameErrorMessageList" ,userImageFileNameErrorMessageList);
 		result = ERROR;
 	}
-/*	try{
-		FileUtils.copyFile(userImage , fileToCreate);
-		session.put("image_file_name", userImageFileName);
-		session.put("imageFilePath", "images/"+userImageFileName);
-		session.put("image_flg",  userImageFileName);
-	}catch(IOException e){
-		e.printStackTrace();
-	}*/
+
 	return result;
 
 	}
@@ -285,6 +315,14 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 	}
 	public void setSession(Map<String, Object> session){
 		this.session = session;
+	}
+
+	public List<String> getUserImageFileNameErrorMessageList() {
+		return userImageFileNameErrorMessageList;
+	}
+
+	public void setUserImageFileNameErrorMessageList(List<String> userImageFileNameErrorMessageList) {
+		this.userImageFileNameErrorMessageList = userImageFileNameErrorMessageList;
 	}
 
 }

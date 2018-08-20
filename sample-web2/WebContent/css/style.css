@@ -95,13 +95,20 @@ body, html {
 }
 
 .submit_btn_box2{
-	width : 50%;
+	width : 500px;
 	display : block; /*何じゃろこれ */
 	margin-top : 10px;
-	margin-right : 25%;
-	margin-left : 25%;
-	float:center;
+	margin-left : 200px;
+	float:left;
 }
+.submit_btn_box3{
+	width : 500px;
+	display : block; /*何じゃろこれ */
+	margin-top : 10px;
+	margin-right : 200px;
+	float:right;
+}
+
 
 .submit_btn2{
 	padding : 0.5em 1em;

@@ -44,20 +44,14 @@
     </div>
     </div>
 </s:if>
-<s:if test="!#session.imageFileNameErrorMessageList.isEmpty()">
+<s:if test="!#session.userImageFileNameErrorMessageList.isEmpty()">
     <div class="error">
     <div class="error-message">
-        <s:iterator value="#session.imageFileNameErrorMessageList"><s:property /><br></s:iterator>
+        <s:iterator value="#session.userImageFileNameErrorMessageList"><s:property /><br></s:iterator>
     </div>
     </div>
 </s:if>
-<s:if test="!#session.imageFilePathErrorMessageList.isEmpty()">
-    <div class="error">
-    <div class="error-message">
-        <s:iterator value="#session.imageFilePathErrorMessageList"><s:property /><br></s:iterator>
-    </div>
-    </div>
-</s:if>
+
 
 <s:form action="AdminRegistConfirmAction" method="post" enctype="multipart/form-data">
 
@@ -91,12 +85,8 @@
     <td><s:textfield name="releaseDate" value="%{#session.releaseDate}" label="発売年月" placeholder="発売年月" class="txt"/></td>
 </tr>
 <tr>
-    <th scope="row">画像ファイル名</th>
-    <td><s:textfield name="imageFileName" value="%{#session.imageFileName}" label="画像ファイル名" placeholder="画像ファイル名" class="txt"/></td>
-</tr>
-<tr>
     <th scope="row">画像ファイル</th>
-    <td><s:file name="userImage" value="%{#session.imageFilePath}" label="画像ファイル" placeholder="画像ファイル" class="file"/></td>
+    <td><s:file name="userImage" label="画像ファイル" placeholder="画像ファイル" class="file"/></td>
 </tr> <!-- 画像は選べるようになったが、　この情報をどう送るのかが不明である。 -->
 
 </table>

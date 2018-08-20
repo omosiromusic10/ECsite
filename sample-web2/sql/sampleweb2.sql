@@ -27,6 +27,23 @@ comment="会員情報テーブル"
 insert into user_info values
 (1,"guest","guest","インターノウス","ゲストユーザー","いんたーのうす","げすとゆーざー",0,"guest@gmail.com",0,0,now(),now());
 
+create table m_category(
+id int primary key not null auto_increment comment "ID",
+category_id int not null unique comment "カテゴリID",
+category_name varchar(20) not null unique comment "カテゴリ名",
+category_description varchar(100) comment "カテゴリ詳細",
+insert_date datetime not null comment "登録日",
+update_date datetime comment "更新日"
+)
+default charset=utf8
+comment="カテゴリマスタテーブル"
+;
+insert into m_category values
+(1,1,"全てのカテゴリー","本、家電・パソコン、おもちゃ・ゲーム全てのカテゴリーが対象となります",now(), null),
+(2,2,"本","本に関するカテゴリーが対象となります",now(),null),
+(3,3,"家電・パソコン","家電・パソコンに関するカテゴリーが対象となります",now(),null),
+(4,4,"おもちゃ・ゲーム","おもちゃ・ゲームに関するカテゴリーが対象となります",now(),null);
+
 create table product_info(
 id int primary key not null auto_increment comment "ID",
 product_id int not null unique comment "商品ID",
@@ -47,23 +64,6 @@ foreign key(category_id) references m_category(category_id)
 default charset=utf8
 comment="商品情報テーブル"
 ;
-
-create table m_category(
-id int primary key not null auto_increment comment "ID",
-category_id int not null unique comment "カテゴリID",
-category_name varchar(20) not null unique comment "カテゴリ名",
-category_description varchar(100) comment "カテゴリ詳細",
-insert_date datetime not null comment "登録日",
-update_date datetime comment "更新日"
-)
-default charset=utf8
-comment="カテゴリマスタテーブル"
-;
-insert into m_category values
-(1,1,"全てのカテゴリー","本、家電・パソコン、おもちゃ・ゲーム全てのカテゴリーが対象となります",now(), null),
-(2,2,"本","本に関するカテゴリーが対象となります",now(),null),
-(3,3,"家電・パソコン","家電・パソコンに関するカテゴリーが対象となります",now(),null),
-(4,4,"おもちゃ・ゲーム","おもちゃ・ゲームに関するカテゴリーが対象となります",now(),null);
 
 insert into product_info values
 ( 1, 1,"本１","ほん１","本１の商品詳細",2,100,"./images","sample.jpg",now(),"発売会社",0,now(),now()),
@@ -171,7 +171,7 @@ family_name_kana varchar(32) not null comment "姓かな",
 first_name_kana varchar(32) not null comment "名かな",
 email varchar(32) not null comment "メールアドレス",
 tel_number varchar(13) not null comment "電話番号",
-user_address varchar(50) not null comment "住所",
+user_address varchar(50) not null comment "住所", <!--ここを場所を選択した時にここのUser_addressを何かのテーブルを用いるか、Descriptionで入れるか。-->
 regist_date datetime not null comment "登録日",
 update_date datetime not null comment "更新日"
 )
