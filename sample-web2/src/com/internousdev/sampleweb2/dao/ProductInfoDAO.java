@@ -285,6 +285,9 @@ public class ProductInfoDAO {
 		return productInfoDtoList;
 	}
 
+
+
+
 	    public int updateProductInfo( int productid  , String productName, String productNameKana, String productDescription,
 			int categoryId, int price, String releaseCompany ,String releaseDate ,String imageFilePath , String imageFileName )throws SQLException{
 		DBConnector dbConnector = new DBConnector();
@@ -347,6 +350,86 @@ public class ProductInfoDAO {
 				e.printStackTrace();
 			}
 			return count;
+		}
+
+	    public boolean checkProductInfo( String productName) throws SQLException{
+	    	DBConnector db = new DBConnector();
+	    	Connection con = db.getConnection();
+
+	    	String sql = "select id from product_info where product_name = ?";
+	    	boolean Result = false;
+			try{
+	    		PreparedStatement ps = con.prepareStatement(sql);
+	    		ps.setString(1, productName);
+	    		ResultSet rs = ps.executeQuery();
+	    		Result= rs.next();
+	    	}catch(SQLException e){
+	    		e.printStackTrace();
+	    	}finally{
+	    		con.close();
+	    	}
+	    	return Result;
+
+	    }
+
+	    public boolean checkProductInfo2(String productNameKana) throws SQLException{
+	    	DBConnector db = new DBConnector();
+	    	Connection con = db.getConnection();
+	    	String sql = "select id from product_info where product_name_kana";
+	    	boolean Result = false;
+	    	try{
+	    		PreparedStatement ps = con.prepareStatement(sql);
+	    		ps.setString(1, productNameKana);
+	    		ResultSet rs = ps.executeQuery();
+	    		Result = rs.next();
+	    	}catch(SQLException e){
+	    		e.printStackTrace();
+	    	}finally{
+	    		con.close();
+	    	}
+	    	return Result;
+	    }
+
+
+
+		public boolean checkProductInfo3(int productId, String productName) throws SQLException {
+			DBConnector db = new DBConnector();
+			Connection con = db.getConnection();
+			//こちらはProduct_idが同じ物ではない場合にProductNameで選択する同じ物があればConfirmのif文でエラーを出力する。
+			String sql = "select id from product_info where product_id != ? and product_name = ?";
+			boolean Result = false;
+			try{
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setInt(1, productId);
+				ps.setString(2, productName);
+				ResultSet rs = ps.executeQuery();
+				Result = rs.next();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}finally{
+				con.close();
+			}
+			return Result;
+		}
+
+		public boolean checkProductInfo4(int productId, String productNameKana) throws SQLException {
+			DBConnector db = new DBConnector();
+			Connection con = db.getConnection();
+			//こちらはProduct_idが同じ物ではない場合にProductNamekanaで選択する同じ物があればConfirmのif文でエラーを出力する。
+			String sql = "select id from product_info where product_id != ? and product_name_kana = ?";
+			boolean Result = false;
+			try{
+				PreparedStatement ps = con.prepareStatement(sql);
+				ps.setInt(1, productId);
+				ps.setString(2, productNameKana);
+				ResultSet rs = ps.executeQuery();
+				Result = rs.next();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}finally{
+				con.close();
+			}
+			return Result;
 		}
 
 }

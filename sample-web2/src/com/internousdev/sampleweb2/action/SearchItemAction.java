@@ -35,15 +35,18 @@ public class SearchItemAction extends ActionSupport implements SessionAware{
 		keywordsErrorMessageList = inputChecker.doCheck("検索ワード", keywords, 0, 16, true, true, true, true, false,true,true);
 
 		ProductInfoDAO productInfoDAO = new ProductInfoDAO();
-		switch (categoryId){
-		case "1":
+
+
+		if ("1".equals(categoryId)) {
 			productInfoDtoList = productInfoDAO.getProductInfoListAll(keywords.replaceAll("　", " ").split(" "));
 			result = SUCCESS;
-			break;
-		default:
+		} else if ("2".equals(categoryId) || "3".equals(categoryId) || "4".equals(categoryId)) {
 			productInfoDtoList = productInfoDAO.getProductInfoListByKeywords(keywords.replaceAll("　"," ").split(" "), categoryId);
 			result = SUCCESS;
-			break;
+		} else {
+			productInfoDtoList = productInfoDAO.getProductInfoListAll(keywords.replaceAll("　", " ").split(" "));
+			result = SUCCESS;
+
 		}
 		Iterator<ProductInfoDTO> iterator = productInfoDtoList.iterator();
 		if(!(iterator.hasNext())){
@@ -63,7 +66,8 @@ public class SearchItemAction extends ActionSupport implements SessionAware{
 		if(pageNo==null){
 			paginationDTO = pagination.initialize(productInfoDtoList, 9);
 		}else{
-			paginationDTO = pagination.getPage(productInfoDtoList, 9, pageNo);
+			int pageNO=Integer.parseInt(pageNo);
+			paginationDTO = pagination.getPage(productInfoDtoList, 9, (pageNO));
 		}
 
 		session.put("productInfoDtoList", paginationDTO.getCurrentProductInfoPage());
@@ -72,9 +76,9 @@ public class SearchItemAction extends ActionSupport implements SessionAware{
 		session.put("totalRecordSize", paginationDTO.getTotalRecordSize());
 		session.put("startRecordNo", paginationDTO.getStartRecordNo());
 		session.put("endRecordNo", paginationDTO.getEndRecordNo());
-		session.put("previousPage", paginationDTO.hasPreviousPage());
+		session.put("previousPage", paginationDTO.isHasPreviousPage());
 		session.put("previousPageNo", paginationDTO.getPreviousPageNo());
-		session.put("nextPage", paginationDTO.hasNextPage());
+		session.put("nextPage", paginationDTO.isHasNextPage());
 		session.put("nextPageNo", paginationDTO.getNextPageNo());
 	    }else{
 		    session.put("productInfoDtoList", null);

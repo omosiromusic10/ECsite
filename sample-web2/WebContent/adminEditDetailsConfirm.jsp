@@ -41,7 +41,7 @@
 </tr>
 <tr>
     <th scope="row"><s:label value="発売年月"/></th>
-    <td><s:property value="releaseDate"/></td>
+    <td><s:property value="#session.releaseDate"/></td>
 </tr>
 <tr>
     <th scope="row"><s:label value="画像ファイル名"/></th>

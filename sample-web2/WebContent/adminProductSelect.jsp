@@ -61,6 +61,6 @@
 
 
 </div>
-<!-- <s:include value="footer.jsp" /> -->
+ <s:include value="footer.jsp" />
 </body>
 </html>

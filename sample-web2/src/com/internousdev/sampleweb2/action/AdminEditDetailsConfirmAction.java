@@ -2,7 +2,10 @@ package com.internousdev.sampleweb2.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +13,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 
+import com.internousdev.sampleweb2.dao.MCategoryDAO;
+import com.internousdev.sampleweb2.dao.ProductInfoDAO;
+import com.internousdev.sampleweb2.dto.MCategoryDTO;
 import com.internousdev.sampleweb2.util.InputChecker;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class AdminEditDetailsConfirmAction extends ActionSupport implements SessionAware {
-
+//変数の宣言
 	private String productName;
 	private String productNameKana;
 	private String productDescription;
@@ -22,40 +28,50 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 	private String imageFileName;
 	private String imageFilePath;
 	private String releaseCompany;
-	private String releaseDate;
+	private Date releaseDate;
 	private int productId;
 
 	private File userImage;
-	private String userImagePathContentType;
+	private String userImageContentType;
 	private String userImageFileName;
-
+//リストの宣言
 	private List<String>productNameErrorMessageList = new ArrayList<String>();
 	private List<String>productNameKanaErrorMessageList = new ArrayList<String>();
 	private List<String>productDescriptionErrorMessageList = new ArrayList<String>();
 	private List<String>priceErrorMessageList = new ArrayList<String>();
-	private List<String>imageFileNameErrorMessageList = new ArrayList<String>();
-	private List<String>imageFilePathErrorMessageList = new ArrayList<String>();
 	private List<String>releaseCompanyErrorMessageList = new ArrayList<String>();
 	private List<String>releaseDateErrorMessageList = new ArrayList<String>();
-
 	private List<String>userImageFileNameErrorMessageList = new ArrayList<String>();
 
 	private int categoryId;
 	private List<String>categoryIdList = new ArrayList<String>();
 	private Map<String, Object> session;
 
-	public String execute(){
-		String result = ERROR;
+	public String execute()throws SQLException{
+		String result = "errorhome";
+		String token = String.valueOf(session.get("token"));
+		if(token != "admin"){
+			return result;
+		}
+
+		result = ERROR;
 		InputChecker inputChecker = new InputChecker();
+
+		if(releaseDate == null){
+			releaseDateErrorMessageList.add("発売年月日を入力してください。 yyyy/mm/ddで入力します。 ");
+		}else{
+			String releaseDate_str = new SimpleDateFormat("yyyy/MM/dd/HH:mm:ss").format(releaseDate);
+			session.put("releaseDate",releaseDate_str);
+		}
+
 
 		session.put("productName", productName);
 		session.put("productNameKana", productNameKana);
 		session.put("productDescription", productDescription);
 		session.put("price", price);
 		session.put("imageFileName",imageFileName);
-		session.put("imageFilePath", "./images");
+		session.put("imageFilePath", imageFilePath);
 		session.put("releaseCompany", releaseCompany);
-		session.put("releaseDate", releaseDate);
 		session.put("categoryId", categoryId);
 		session.put("Status", 0);
 		session.put("productId", productId);
@@ -63,9 +79,22 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 
 	    //ファイルアップロードの処理
 		if(!(userImage == null)){
+		long fileMaxSize = 3145728; //3MB
 		String filePath = ServletActionContext.getServletContext().getRealPath("/").concat("images");
 		System.out.println("Image Location:" + filePath);
 		File fileToCreate = new File(filePath, userImageFileName);
+		userImageFileNameErrorMessageList = inputChecker.doCheck("画像ファイル", userImageFileName, 1, 50, true, true, true, true, true, true, true);
+
+		//この中にif文を挿入し、画像のみのファイルを指定する。
+		if(!(userImage(userImageContentType))){
+			userImageFileNameErrorMessageList.add("画像ファイルが異なります。jpegのみ挿入出来ます。");
+			result = ERROR;
+		}
+		if(userImage.length()>fileMaxSize){
+			userImageFileNameErrorMessageList.add("3MBより大きい画像ファイルは挿入出来ません。");
+		}
+
+
 		try{
 			FileUtils.copyFile(userImage, fileToCreate);
 			   session.put("image_file_name", userImageFileName);
@@ -78,8 +107,11 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 		}
 		}else{
 			userImageFileName="";
+			userImageFileNameErrorMessageList.add("画像ファイルを挿入してください");
 			result = ERROR;
 		}
+		//こちらもこれでも出来るがMCategoryを使用した表示で行う。
+		/*
 		try{
 			switch(categoryId){
 			case 1:
@@ -97,7 +129,16 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-		}
+		}*/
+
+	//ここでmCategoryDtoListを使用してcategoryIdを表示された名前で取ってくる
+		MCategoryDAO mCategoryDAO = new MCategoryDAO();
+		MCategoryDTO mCategoryDTO = mCategoryDAO.getMCategory(categoryId);
+
+		//ユーザーID,statusをセッションに格納
+		//putされたcategoryIdをメソッド内でセレクトし、categoryNameをsession内に保存する。
+
+		session.put("categoryName", mCategoryDTO.getCategoryName());
 
 
 
@@ -105,16 +146,23 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 	productNameKanaErrorMessageList = inputChecker.doCheck("商品名ふりがな", productNameKana, 1, 32, false, false, true, false, false, false, false);
 	productDescriptionErrorMessageList = inputChecker.doCheck("商品名詳細", productDescription, 1, 320, true, true, true, true, true, true, true);
 	priceErrorMessageList = inputChecker.doCheck("価格", price, 1, 8, false, false, false, true, false, false, false);
-//	imageFileNameErrorMessageList = inputChecker.doCheck("画像ファイル名", imageFileName, 1, 16, true, true, true, true, true, true, true);
 	releaseCompanyErrorMessageList = inputChecker.doCheck("発売会社名", releaseCompany, 1, 16, true, true, true, true, false, true, false);
-	releaseDateErrorMessageList = inputChecker.doCheck("発売年月日", releaseDate, 1, 16, false, true, false, true, true, false, false);
-	userImageFileNameErrorMessageList = inputChecker.doCheck("画像ファイル", userImageFileName, 1, 32, true, true, true, true, true, true, true);
+
+	//重複防止の為の処理 boolean型にするのでこのチェック文自体が　trueかfalseになる。
+	ProductInfoDAO productInfoDao = new ProductInfoDAO();
+
+	if(productInfoDao.checkProductInfo3(productId,productName)){
+		productNameErrorMessageList.add("選択していない商品名での更新は出来ません。");
+	}
+	if(productInfoDao.checkProductInfo4(productId,productNameKana)){
+		productNameErrorMessageList.add("選択していない商品名のふりがなでは更新は出来ません。");
+	}
+
 
 	if(productNameErrorMessageList.size()==0
 			&& productNameKanaErrorMessageList.size()==0
 			&& productDescriptionErrorMessageList.size()==0
 			&& priceErrorMessageList.size()==0
-	//		&& imageFileNameErrorMessageList.size()==0
 			&& releaseCompanyErrorMessageList.size()==0
 			&& releaseDateErrorMessageList.size()==0
 		    && userImageFileNameErrorMessageList.size()==0 ){
@@ -124,7 +172,6 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 		session.put("productNameKanaErrorMessageList", productNameKanaErrorMessageList);
 		session.put("productDescriptionErrorMessageList", productDescriptionErrorMessageList);
 		session.put("priceErrorMessageList", priceErrorMessageList);
-	//	session.put("imageFileNameErrorMessageList", imageFileNameErrorMessageList);
 		session.put("releaseCompanyErrorMessageList", releaseCompanyErrorMessageList);
 		session.put("releaseDateErrorMessageList", releaseDateErrorMessageList);
 		session.put("userImageFileNameErrorMessageList" ,userImageFileNameErrorMessageList);
@@ -133,6 +180,10 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 
 	return result;
 
+	}
+
+	private boolean userImage(String extension) {
+		return (extension.equals("image/jpeg"));
 	}
 
 	public int getProductId() {
@@ -199,14 +250,6 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 		this.releaseCompany = releaseCompany;
 	}
 
-	public String getReleaseDate() {
-		return releaseDate;
-	}
-
-	public void setReleaseDate(String releaseDate) {
-		this.releaseDate = releaseDate;
-	}
-
 	public File getUserImage() {
 		return userImage;
 	}
@@ -215,12 +258,12 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 		this.userImage = userImage;
 	}
 
-	public String getUserImagePathContentType() {
-		return userImagePathContentType;
+	public String getUserImageContentType() {
+		return userImageContentType;
 	}
 
-	public void setUserImagePathContentType(String userImagePathContentType) {
-		this.userImagePathContentType = userImagePathContentType;
+	public void setUserImageContentType(String userImageContentType) {
+		this.userImageContentType = userImageContentType;
 	}
 
 	public String getUserImageFileName() {
@@ -261,22 +304,6 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 
 	public void setPriceErrorMessageList(List<String> priceErrorMessageList) {
 		this.priceErrorMessageList = priceErrorMessageList;
-	}
-
-	public List<String> getImageFileNameErrorMessageList() {
-		return imageFileNameErrorMessageList;
-	}
-
-	public void setImageFileNameErrorMessageList(List<String> imageFileNameErrorMessageList) {
-		this.imageFileNameErrorMessageList = imageFileNameErrorMessageList;
-	}
-
-	public List<String> getImageFilePathErrorMessageList() {
-		return imageFilePathErrorMessageList;
-	}
-
-	public void setImageFilePathErrorMessageList(List<String> imageFilePathErrorMessageList) {
-		this.imageFilePathErrorMessageList = imageFilePathErrorMessageList;
 	}
 
 	public List<String> getReleaseCompanyErrorMessageList() {
@@ -323,6 +350,14 @@ public class AdminEditDetailsConfirmAction extends ActionSupport implements Sess
 
 	public void setUserImageFileNameErrorMessageList(List<String> userImageFileNameErrorMessageList) {
 		this.userImageFileNameErrorMessageList = userImageFileNameErrorMessageList;
+	}
+
+	public Date getReleaseDate() {
+		return releaseDate;
+	}
+
+	public void setReleaseDate(Date releaseDate) {
+		this.releaseDate = releaseDate;
 	}
 
 }

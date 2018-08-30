@@ -13,7 +13,6 @@ body, html {
 	float : left;
 	width : 100%;
 	height: 60px;
-	padding : 10px;
 /*	background-color : #005392; */
 	position: relative;
   background: -moz-linear-gradient(to right, rgb(111, 124, 255), #ffc994);
@@ -168,20 +167,20 @@ body, html {
 #MainArea{
 height :400px;
 width :100%;
-text-align:center;
 }
 
 #MainNaviArea{
 text-align:center;
-height :250px;
+height :400px;
 width :100%;
 }
 #MainNaviArea img{
 	display:inline-block;
 	width:200px;
 	height:200px;
-	padding:30px 20px 30px 20px;
+	padding:50px 20px 30px 20px;
 	margin-right:50px;
+	margin-top:100px;
 }
 
 .4Wrap-clearfix{
@@ -372,6 +371,9 @@ position: absolute;
     border-bottom: 10px solid transparent;
 }
 
+.bxbox{
+	padding-left:32%;
+}
 
 
 table.horizontal-list-table, th, td {
@@ -509,7 +511,6 @@ table.vertical-list-table-mini td {
 	left : 0;
 	z-index : 10;
 	width : 100%;
-	padding : 10px;
 	color : #ffffff;
 	background-color : #005392;
 }
@@ -722,3 +723,7 @@ table.vertical-list-table-mini td {
 .input-file input[type="file"] {
   opacity: 0;
 }
+
+
+
+

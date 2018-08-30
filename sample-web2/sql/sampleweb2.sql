@@ -25,7 +25,8 @@ default charset=utf8
 comment="会員情報テーブル"
 ;
 insert into user_info values
-(1,"guest","guest","インターノウス","ゲストユーザー","いんたーのうす","げすとゆーざー",0,"guest@gmail.com",0,0,now(),now());
+(1,"guest","guest","インターノウス","ゲストユーザー","いんたーのうす","げすとゆーざー",0,"guest@gmail.com",0,0,now(),now()),
+(2,"admin","admin","インターノウス","アドミン","いんたーのうす","あどみん",0,"guest@gmail.com",1,0,now(),now());
 
 create table m_category(
 id int primary key not null auto_increment comment "ID",
@@ -162,23 +163,7 @@ default charset=utf8
 comment="カート情報テーブル"
 ;
 
-create table destination_info(
-id int primary key not null auto_increment comment "ID",
-user_id varchar(16) not null comment "ユーザーID",
-family_name varchar(32) not null comment "姓",
-first_name varchar(32) not null comment "名",
-family_name_kana varchar(32) not null comment "姓かな",
-first_name_kana varchar(32) not null comment "名かな",
-email varchar(32) not null comment "メールアドレス",
-tel_number varchar(13) not null comment "電話番号",
-user_address varchar(50) not null comment "住所", <!--ここを場所を選択した時にここのUser_addressを何かのテーブルを用いるか、Descriptionで入れるか。-->
-regist_date datetime not null comment "登録日",
-update_date datetime not null comment "更新日"
-)
 
-default charset=utf8
-comment="宛先情報テーブル"
-;
 
 create table purchase_history_info(
 id int primary key not null auto_increment comment "ID",
@@ -195,8 +180,25 @@ foreign key(product_id) references product_info(product_id)
 default charset=utf8
 comment="購入履歴情報テーブル"
 ;
+
+create table destination_info(
+id int primary key not null auto_increment comment "ID",
+user_id varchar(16) not null comment "ユーザーID",
+family_name varchar(32) not null comment "姓",
+first_name varchar(32) not null comment "名",
+family_name_kana varchar(32) not null comment "姓かな",
+first_name_kana varchar(32) not null comment "名かな",
+email varchar(32) not null comment "メールアドレス",
+tel_number varchar(13) not null comment "電話番号",
+user_address varchar(50) not null comment "住所",
+regist_date datetime not null comment "登録日",
+update_date datetime not null comment "更新日"
+)
+default charset=utf8
+comment="宛先情報テーブル"
+;
 insert into destination_info values
-(1,"guest","インターノウス","テストユーざー","いんたーのうす","てすとゆーざー","guest@internous.co.jp","080-1234-5678","東京都千代田区三番町１ー１　ＫＹ三番町ビル１Ｆ",now(),"0000-00-00 00:00:00");
+(1,"guest","インターノウス","テストユーざー","いんたーのうす","てすとゆーざー","guest@internous.co.jp","080-1234-5678","東京都千代田区三番町１ー１　ＫＹ三番町ビル１Ｆ",now(),now());
 
 create table inquiry(
 userId varchar(255),
