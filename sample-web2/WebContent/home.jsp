@@ -26,6 +26,10 @@ jQuery(document).ready(function($){
 	});
 });
 });
+
+//対応するjspやhtml等でJqueryがうまく作動する方法が幾つかある。
+//今回はこの方法で作動したが、他のツールの場合はこうではないので臨機応変に対応。
+
 </script>
 <title>サンプルウェブホーム！</title>
 </head>
@@ -58,10 +62,10 @@ jQuery(document).ready(function($){
 <div class="4Wrap-clearfix">
 
 <div class="colAinCol4" >
-<a href="ProductListAction"><img  src="./images/food.jpg"></a>
-<a href="ProductListAction"><img src="./images/food2.jpg"></a>
-<a href="ProductListAction"><img src="./images/ice.jpg"></a>
-<a href="ProductListAction"><img  src="./images/study.jpg"></a>
+<a href="ProductListAction"><img  src="./images/image3.jpg"></a>
+<a href="ProductListAction"><img src="./images/pc2.jpg"></a>
+<a href="ProductListAction"><img src="./images/terebi.jpg"></a>
+<a href="ProductListAction"><img  src="./images/PS3.jpg"></a>
 </div>
 
 
@@ -101,13 +105,6 @@ jQuery(document).ready(function($){
     </div>
 
 </div>
-
-<!-- ここで何かさびしいのでアニメーションを作りたい。
-と言っても結局jQueryをやろうとしても反応しない。
-この上のscriptはecsiteのプロジェクトから持ってきた物で
-ecsiteでは通常通りsliderで出来ていた。　何故こちらで出来ないのだろうか。 -->
-
-
 
 
 </div>

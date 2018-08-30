@@ -13,6 +13,9 @@
 <jsp:include page="header.jsp"/>
 <div id="contents">
 <h1>商品編集画面</h1>
+
+<h2>画像をクリックすると編集画面に移動します。</h2>
+
 <div id="product-list">
 
 

@@ -40,7 +40,8 @@
 <div id="newItemList">
 <!-- 商品一覧の部分 -->
 <s:iterator value="#session.productInfoDtoList">
-<div class="product-list-box">
+<div id="hiddenBox">
+			<div id="newItemBox">
     <ul>
     <li>
     <a href='<s:url action="ProductDetailsAction">
@@ -51,6 +52,7 @@
     <s:property value="price" />円<br>
     </li>
 </ul>
+</div>
 </div>
 </s:iterator>
 </div>

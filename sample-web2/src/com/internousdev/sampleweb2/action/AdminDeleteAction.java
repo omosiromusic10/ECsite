@@ -26,7 +26,6 @@ public class AdminDeleteAction extends ActionSupport implements SessionAware {
 	private List<MCategoryDTO> mCategoryDtoList = new ArrayList<MCategoryDTO>();
 	private List<ProductInfoDTO> productInfoDtoList = new ArrayList<ProductInfoDTO>();
 	private Map<String, Object> session;
-
 	//SeachItemAction(ページ情報)の追加
 		private int pageNo;
 

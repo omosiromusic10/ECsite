@@ -10,6 +10,7 @@
 <meta http-equiv="refresh" content="0;URL='HomeAction'"/>
 <title>sample-web</title>
 </head>
+<!-- 一番最初に飛ぶIndexのjsp。ここから3秒後にHomeActionに移動する -->
 <body>
 <div id="footer">
 	<s:include value="footer.jsp"/>
